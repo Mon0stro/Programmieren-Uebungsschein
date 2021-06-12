@@ -1,7 +1,7 @@
 package edu.kit.informatik;
 
 /**
- * 
+ * kleiner Test
  * @author timch
  * @version 1.0
  *
