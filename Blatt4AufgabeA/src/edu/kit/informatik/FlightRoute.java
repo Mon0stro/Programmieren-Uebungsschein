@@ -15,4 +15,10 @@ public class FlightRoute {
 		this.currency = currency;
 	}
 	
+	public int GetAircraftID () {
+		return aircraftID;
+	}
+	
+	
+	
 }
