@@ -3,17 +3,29 @@ package edu.kit.informatik;
 import java.util.Collections;
 import java.util.LinkedList;
 
+/**
+ * @version 1.0
+ * @author uszjk
+ * Diese Klasse Modelliert eine Liste aller Flugrouten
+ */
 public class FlightRouteList {
     
     private LinkedList<FlightRoute> routes;
     
-    FlightRouteList () {
+    /**
+     * Konstruktor einer Flugroutenliste
+     */
+    FlightRouteList() {
         routes = new LinkedList<FlightRoute>();
     }
-    
-    public void add (String[] values) {
+
+    /**
+     * 
+     * @param values
+     */
+    public void add(String[] values) {
         
-        if (isElement(values[0]) == false) {
+        if (isElement(values) == false) {
             routes.add(new FlightRoute(values));
             Collections.sort(routes);
             System.out.println("OK");
@@ -23,11 +35,15 @@ public class FlightRouteList {
         }
     }
     
+    /**
+     * 
+     * @param removealIDString
+     */
     public void remove(String[] removealIDString) {
         boolean somethingRemoved = false;
         int removealID = Integer.parseInt(removealIDString[0]);
-        for(int i = 0; i<routes.size(); i++) {
-            if (routes.get(i).GetAircraftID() == removealID) {
+        for (int i = 0; i < routes.size(); i++) {
+            if (routes.get(i).getAircraftID() == removealID) {
                 routes.remove(i);
                 System.out.println("OK");
                 somethingRemoved = true;
@@ -35,25 +51,46 @@ public class FlightRouteList {
             }
         }
         if (somethingRemoved == false) {
-            System.out.println("ERROR, Diese Flugzeugkennung gehört zu keiner Route");
+            System.out.println("ERROR, Diese Flugzeugkennung gehört zu keiner Route 1");
         }
     }
     
-    public void print () {
+    /**
+     * 
+     */
+    public void printRoutes() {
         if (routes.isEmpty() == false) {
-            for(FlightRoute flightRoute : routes)
+            for (FlightRoute flightRoute : routes)
                 System.out.println(flightRoute);
         }
     }
     
-    public boolean isElement (String checkIDString) {
-        int checkID = Integer.parseInt(checkIDString);
-        for(FlightRoute flightRoute : routes) {
-            if (flightRoute.GetAircraftID() == checkID) {
+    /**
+     * 
+     * @param parameters
+     * @return true wenn die übergebene Flugroute in der Liste existiert
+     */
+    public boolean isElement(String[] parameters) {
+        int checkID = Integer.parseInt(parameters[0]);
+        for (FlightRoute flightRoute : routes) {
+            if (flightRoute.getAircraftID() == checkID) {
                 return true;
             }
         }
-        System.out.println("ERROR, Diese Flugzeugkennung gehört zu keiner Route");
         return false;
+    }
+    
+    /**
+     * 
+     * @param parameters
+     * @return Die FLugroute mit der Übergebenen FLugzeugkennung
+     */
+    public FlightRoute findFlightRoute(String[] parameters) {
+        for (FlightRoute flightRoute : routes) {
+            if (flightRoute.getAircraftID() == Integer.parseInt(parameters[0])) {
+                return flightRoute;
+            }
+        }
+        return null;
     }
 }
