@@ -25,45 +25,7 @@ public class LockingSystem {
     private String getBoltState (int bolt) {
         return configuration[bolt];
     }
-    
-    public boolean moveable(int bolt) {
-        if (bolt == 0) {
-            return true;
-        }
-        else if (bolt == 1) {
-            if (getBoltState(bolt-1).equals("zu")) {
-                return false;
-                }
-            return true;
-        }
-        else if (bolt == numberOfBolts - 1) {
-            for (int i = 0; i<numberOfBolts; i++) {
-                if (configuration[i].equals("auf")) {
-                    if (configuration[bolt-1].equals("auf")) {
-                        for (int j = 0; j<bolt - 1; j++) {
-                            if (configuration[j].equals("auf")) {
-                                return false;
-                            }
-                        }
-                        return true;
-                    }
-                    return false;
-                }
-            }
-            return true;
-        }
-        else {
-            if (configuration[bolt-1].equals("auf")) {
-                for (int i = 0; i<bolt - 1; i++) {
-                    if (configuration[i].equals("auf")) {
-                        return false;
-                    }
-                }
-                return true;
-            }
-            return false;
-        }        
-    }
+  
     
     /**
      * 

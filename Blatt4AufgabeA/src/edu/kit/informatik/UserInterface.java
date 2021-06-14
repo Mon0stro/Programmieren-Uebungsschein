@@ -17,12 +17,11 @@ public class UserInterface {
     private static final String CMD_LIST_BOOKINGS = "list-bookings";
     private static final String CMD_QUIT = "quit";
     
-    private static final String ERROR_MSG_UNKNOW_COMMAND = "ERROR, dieser Befehl existiert nicht";
-    private static final String ERROR_MSG_WRONG_COMMAND_FORMAT = "ERROR, dieser Befehl wurde mit falschen Parametern "
-    														   + "eingegeben.";
-
-    private boolean quit;
     private final Scanner scanner;
+    private boolean quit;
+    private Input input;
+    private FlightRouteList flightRouteList;
+    private CustomerList customerList;
     
     /**
      * 
@@ -30,12 +29,10 @@ public class UserInterface {
     UserInterface() {
         scanner = new Scanner(System.in);
         quit = false;
+        flightRouteList = new FlightRouteList();
+        customerList = new CustomerList();
     }
-    
-    /**
-     * 
-     * @return
-     */
+
     public boolean getQuit() {
         return quit;
     }
@@ -43,89 +40,63 @@ public class UserInterface {
      * 
      */
     public void command() {
-        String[] input = scanner.nextLine().split(" ");
-        switch (input[0]) {	
+        input = new Input (scanner.nextLine());
+        switch (input.getCommand()) {	
         
         
-        
-        	case CMD_ADD:
-        		if (input.length != 2) {
-        			System.out.println(ERROR_MSG_WRONG_COMMAND_FORMAT);
-        			break;
+            case CMD_ADD:
+        		if (input.checkAdd() == false) {
+        		    break;
         		}
-        		String[] parameter = input[1].split(";");
-        		if (parameter.length != 5) {
-        			System.out.println(ERROR_MSG_WRONG_COMMAND_FORMAT);
-        			break;
-        		}
-        		try {
-        			int tempAircraftID = Integer.parseInt(parameter[0]);
-        			int tempPrice = Integer.parseInt(parameter[3]);
-        			Currency tempCurrency = Currency.valueOf(parameter[4]);
-        			String tempStart = parameter[1];
-            		String tempDestination = parameter[2];
-            		if (tempAircraftID > 0 && tempAircraftID < 100000 && tempPrice > 0) {
-            			FlightRoute  = new FlightRoute(tempAircraftID, tempStart, tempDestination, tempPrice, tempCurrency);
-            		}
-        		}
-        		catch (NumberFormatException e){
-        			System.out.println(ERROR_MSG_WRONG_COMMAND_FORMAT + " Flugzeugkennung und Preis müssen eine Zahl sein!");
-        		}
-        		catch (IllegalArgumentException e) {
-        			System.out.println(ERROR_MSG_WRONG_COMMAND_FORMAT + " must be EUR, USD, GBP, JPY");
-        		}
+        		flightRouteList.add(input.getParameters());
         		break;
         		
         		
+            case CMD_REMOVE:
+                if (input.checkRemove() == false) {
+                    break;
+                }
+                flightRouteList.remove(input.getParameters());
         		
-        	case CMD_REMOVE:
-        		if (input.length != 2) {
-        			System.out.println(ERROR_MSG_WRONG_COMMAND_FORMAT);
-        			break;
-        		}
-        		break;
+                
+            case CMD_LIST_ROUTE:
+                if (input.checkListRoute() == false) {
+                    break;
+                }
+                flightRouteList.print();
+                break;
+                
+                
+            case CMD_BOOK:
+                if (input.checkBook() == false) {
+                    break;
+                }
+                System.out.println("TO DO");
+                if (flightRouteList.isElement(input.getSpecificParameter(0)) == false) {
+                    break;
+                }
+                
+                break;
         		
-        		
-        		
-        	case CMD_LIST_ROUTE:
-        		if (input.length != 1) {
-        			System.out.println(ERROR_MSG_WRONG_COMMAND_FORMAT);
-        			break;
-        		}
-        		break;
-        		
-        		
-        		
-        	case CMD_BOOK:
-        		if (input.length != 2) {
-        			System.out.println(ERROR_MSG_WRONG_COMMAND_FORMAT);
-        			break;
-        		}
-        		break;
-        	
-        		
-        		
-        	case CMD_LIST_BOOKINGS:
-        		if (input.length != 1) {
-        			System.out.println(ERROR_MSG_WRONG_COMMAND_FORMAT);
-        			break;
-        		}
-        		break;
-        		
-        		
-        		
-        	case CMD_QUIT:
-        		if (input.length != 1) {
-        			System.out.println(ERROR_MSG_WRONG_COMMAND_FORMAT);
+  
+            case CMD_LIST_BOOKINGS:
+                if (input.checkListBookings() == false) {
+                    break;
+                }
+                System.out.println("TO DO");
+                break;
+                
+                
+            case CMD_QUIT:
+        		if (input.checkQuit() == false) {
         			break;
         		}
         		quit = true;
         		break;
         		
-        		
-        		
+
         	default:
-        		System.out.println(ERROR_MSG_UNKNOW_COMMAND);
+        		System.out.println("ERROR, Dieser Befehl existiert nicht");
         }
     }
 }

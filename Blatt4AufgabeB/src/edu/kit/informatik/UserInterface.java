@@ -14,7 +14,8 @@ public class UserInterface {
     private static final String CMD_INIT = "init";
     private static final String CMD_OPEN = "open";
     private static final String CMD_CLOSE = "close";
-    private static final String ERROR_MSG_UNKNOW_COMMAND = "ERROR, Dieser Befehl existiert nicht";
+    
+    private static final String ERROR_MSG_UNKNOW_COMMAND = "ERROR, dieser Befehl wurde falsch eingegeben!";
 
     private boolean quit;
     private final Scanner scanner;
@@ -41,50 +42,61 @@ public class UserInterface {
      */
     public void command() {
         String[] input = scanner.nextLine().split(" ");
-        if (input.length == 1) {
-            switch (input[0]) {
-                case CMD_QUIT:
-                    quit = true;
-                    break;    
-                case CMD_OPEN:
-                    lockingSystem.open();
-                    break;    
-                case CMD_CLOSE:
-                    lockingSystem.close();
+        switch (input[0]) { 
+        
+        
+        
+            case CMD_QUIT:
+                if (input.length != 1) {
+                    System.out.println(ERROR_MSG_UNKNOW_COMMAND + " Erwartet wird: <quit>");
                     break;
-                    
-                case "moveable":
-                    System.out.println(lockingSystem.moveable(Integer.parseInt(input[1])));
-                    
-                default:
-                    System.out.println(ERROR_MSG_UNKNOW_COMMAND);
-            }
-        }
-        else if (input.length == 2) {
-            if (input[0].equals(CMD_INIT)) {
-                String[] check = input[1].split(",");
-                if (checkInit(check) == true) {
-                    lockingSystem = new LockingSystem(check);
-                    for (int i = 0; i<check.length; i++) {
-                        System.out.println(i+1 + " " + lockingSystem.moveable(i));
-                    }
                 }
-                else {
-                    System.out.println(ERROR_MSG_UNKNOW_COMMAND);
+                quit = true;
+                break;
+                
+                
+                
+            case CMD_INIT:
+                if (input.length != 2) {
+                    System.out.println(ERROR_MSG_UNKNOW_COMMAND + " Erwartet wird: <init> <zustand>");
+                    break;
                 }
-            }
-            else {
+                if (checkInit(input[1]) == false) {
+                    System.out.println(ERROR_MSG_UNKNOW_COMMAND + " Als Zustand ist nur auf und zu erlaubt");
+                    break;
+                }
+                lockingSystem = new LockingSystem (input[1].split(","));
+                break;
+                
+                
+                
+            case CMD_OPEN:
+                if (input.length != 1) {
+                    System.out.println(ERROR_MSG_UNKNOW_COMMAND + " Erwartet wird: <open>");
+                    break;
+                }
+                break;
+                
+                
+                
+            case CMD_CLOSE:
+                if (input.length != 1) {
+                    System.out.println(ERROR_MSG_UNKNOW_COMMAND + " Erwartet wird: <close>");
+                    break;
+                }
+                break;
+                
+                
+            
+            default: 
                 System.out.println(ERROR_MSG_UNKNOW_COMMAND);
-            }
-        }
-        else {
-            System.out.println(ERROR_MSG_UNKNOW_COMMAND);
         }
     }
     
-    private boolean checkInit(String[] check) {
-        for (int i = 0; i < check.length; i++) {
-            if ((check[i].equals("auf") || check[i].equals("zu")) == false) {
+    private boolean checkInit(String state) {
+        String[]bolts = state.split(",");
+        for (int i = 0; i < bolts.length; i++) {
+            if (bolts[i] != "auf" && bolts[i] != "zu") {
                 return false;
             }
         }
